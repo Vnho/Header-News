@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login">
    主页
   </div>
 </template>
@@ -11,3 +11,7 @@ export default {
 
 }
 </script>
+
+<style lang="less">
+
+</style>
