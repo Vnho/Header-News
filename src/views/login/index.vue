@@ -62,10 +62,16 @@ export default {
   methods: {
     login () {
       // this.$refs.formObj 获取el-form 的对象实例
-      this.$refs.formObj.validate(function (isOK) {
+      this.$refs.formObj.validate(isOK => {
         if (isOK) {
           // 如果为true 继续下一步，调用接口登录
-
+          this.$axios({
+            method: 'POST',
+            url: '/authorizations',
+            data: this.loginForm
+          }).then(res => {
+            console.log(res.data)
+          })
         }
       })
     }
