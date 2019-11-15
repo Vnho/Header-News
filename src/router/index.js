@@ -1,18 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/home'
+import layOut from '../views/layout'
 import Login from '../views/login'
-
+import Home from '../views/home/index.vue' // 在vue-cli中，@永远在src目录中查找
+import Article from '../views/article/index.vue'
+import Publish from '../views/publish/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
-    component: Home
+    component: layOut,
+    children: [
+      {
+        path: '',
+        component: Home
+      },
+      {
+        path: '/article',
+        component: Article
+      },
+      {
+        path: '/publish',
+        component: Publish
+      }
+    ]
   },
   {
     path: '/login',

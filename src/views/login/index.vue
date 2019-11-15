@@ -84,7 +84,7 @@ export default {
             .then(res => {
               console.log(res.data)
               window.localStorage.setItem('user-token', res.data.data.token)
-              this.$router.push('/home')
+              this.$router.push('/layout')
             })
             .catch(() => {
               this.$message({
