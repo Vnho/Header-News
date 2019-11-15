@@ -5,6 +5,7 @@ import Login from '../views/login'
 import Home from '../views/home/index.vue' // 在vue-cli中，@永远在src目录中查找
 import Article from '../views/article/index.vue'
 import Publish from '../views/publish/index.vue'
+import Nprogress from 'nprogress'
 Vue.use(VueRouter)
 
 const routes = [
@@ -62,6 +63,7 @@ const router = new VueRouter({
 // 具体要做的就是:判断用户登录状态,有通过,没有不通过
 
 router.beforeEach((to, from, next) => {
+  Nprogress.start()
   // 判断，如果访问的是登录页，直接放行
   if (to.path === '/login') {
     return next()
@@ -75,4 +77,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach(route => {
+  Nprogress.done()
+})
 export default router

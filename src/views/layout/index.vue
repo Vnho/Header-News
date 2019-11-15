@@ -8,7 +8,7 @@
       </div>
       <!-- 左侧菜单 -->
       <el-menu
-        router="true"
+        :router="true"
         style="width:221px"
         background-color="#353b4e"
         text-color="#adafb5"
