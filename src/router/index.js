@@ -10,10 +10,18 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/layout',
     component: layOut,
     children: [
       {
         path: '',
+        redirect: '/home'
+      },
+      {
+        path: '/home',
         component: Home
       },
       {
@@ -42,6 +50,29 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+/*
+路由拦截器 beforeEach的用法
+接受一个函数作为参数
+参数1: to 表示去哪里的信息
+参数2: from 表示来自哪里的信息
+参数3: next 是一个方法,用于路由放行
+*/
+// 具体要做的就是:判断用户登录状态,有通过,没有不通过
+
+router.beforeEach((to, from, next) => {
+  // 判断，如果访问的是登录页，直接放行
+  if (to.path === '/login') {
+    return next()
+  } else {
+    const token = window.localStorage.getItem('user-token')
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
 })
 
 export default router

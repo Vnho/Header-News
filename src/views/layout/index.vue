@@ -15,7 +15,7 @@
         active-text-color="#ffd04b"
       >
         <!-- 一级菜单 -->
-        <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/home">首页</el-menu-item>
         <!-- 二级菜单 -->
         <el-submenu index="1">
           <template slot="title">内容插槽</template>
