@@ -73,6 +73,10 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('/login')
+      // 如果在登录页非登录状态访问
+      // 非登录页面，手动终止进度条
+      // 否则进度条不会停止
+      Nprogress.done()
     }
   }
 })

@@ -36,7 +36,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          // window.localStorage.removeItem('user-token')
+          window.localStorage.removeItem('user-token')
           this.$router.push('/login')
           this.$message({
             type: 'success',
