@@ -19,7 +19,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人信息</el-dropdown-item>
           <el-dropdown-item>git地址</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="userOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
@@ -27,7 +27,31 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    userOut () {
+      this.$confirm('您将退出登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // window.localStorage.removeItem('user-token')
+          this.$router.push('/login')
+          this.$message({
+            type: 'success',
+            message: '退出成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退出'
+          })
+        })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -45,21 +69,4 @@ export default {}
     border-radius: 50%;
   }
 }
-// .left {
-//   display: flex;
-//   align-items: center;
-//   i {
-//     font-size: 24px;
-//   }
-//   span {
-//     margin-left: 4px;
-//   }
-// }
-// .right {
-//   display: flex;
-//   align-items: center;
-//   img {
-//     border-radius: 50%;
-//   }
-// }
 </style>
