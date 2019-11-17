@@ -201,24 +201,24 @@ export default {
     // 换页时加载文章数据
     onPageChange (page) {
       this.loadArticle(page)
+    },
+    onDelete (ID) {
+      const token = window.localStorage.getItem('user-token')
+      this.$axios({
+        method: 'DELETE',
+        url: `/articles/${ID}`,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(res => {
+          console.log(res)
+          this.loadArticle()
+        })
+        .catch(err => {
+          console.log(err, '删除失败')
+        })
     }
-    // onDelete (ID) {
-    //   const token = window.localStorage.getItem('user-token')
-    //   this.$axios({
-    //     method: 'DELETE',
-    //     url: `/articles/${ID}`,
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   })
-    //     .then(res => {
-    //       console.log(res)
-    //       this.loadArticle()
-    //     })
-    //     .catch(err => {
-    //       console.log(err, '删除失败')
-    //     })
-    // }
   }
 }
 </script>
