@@ -9,7 +9,12 @@
           <el-input v-model="publishForm.title"></el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="textarea" v-model="publishForm.content"></el-input>
+          <!-- 富文本编辑器 -->
+          <quill-editor
+            v-model="publishForm.content"
+            ref="myQuillEditor"
+            :options="editorOption"
+          ></quill-editor>
         </el-form-item>
         <!-- <el-form-item label="封面">
           <el-radio-group v-model="publishForm.cover">
@@ -18,7 +23,7 @@
             <el-radio label="0">无图</el-radio>
             <el-radio label="-1">自动</el-radio>
           </el-radio-group>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="频道">
           <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
             <el-option
@@ -30,11 +35,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-          type="primary"
-          @click="onSubmit(false)">提交</el-button>
-          <el-button
-          @click="onSubmit(true)">草稿</el-button>
+          <el-button type="primary" @click="onSubmit(false)">提交</el-button>
+          <el-button @click="onSubmit(true)">草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -42,18 +44,30 @@
 </template>
 
 <script>
+// 引入富文本编辑器的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+// 加载富文本编辑器核心组件
+import { quillEditor } from 'vue-quill-editor'
+
 export default {
+  components: {
+    quillEditor
+  },
   name: 'PublishArticle',
   data () {
     return {
+      editorOption: {}, // 富文本编辑器的配置选项对象
       publishForm: {
         title: '',
         content: '',
+        channel_id: '',
         cover: {
           type: 0,
           images: []
-        },
-        channel_id: ''
+        }
       },
       articleChannel: []
     }
@@ -69,9 +83,9 @@ export default {
         url: '/articles',
 
         // headers参数
-        headers: {
-          Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
-        },
+        // headers: {
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // },
 
         // Query参数
         params: {

@@ -153,14 +153,13 @@ export default {
       // 设置默认页为第一页
       this.loading = true
       // 在项目中,除了登录页'/login'不需要token,其他接口都需要token
-      const token = window.localStorage.getItem('user-token')
       this.$axios({
         method: 'GET',
         url: '/articles',
         // 这里是因为需要token数据验证要需要设置请求头，格式在文档中有显示
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
+        // headers: {
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // },
 
         /*
         Query参数,请求数据列表参数
@@ -207,13 +206,12 @@ export default {
 
     // 删除文章
     onDelete (ID) {
-      const token = window.localStorage.getItem('user-token')
       this.$axios({
         method: 'DELETE',
-        url: `/articles/${ID}`,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        url: `/articles/${ID}`
+        // headers: {
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // }
       })
         .then(res => {
           console.log(res)
