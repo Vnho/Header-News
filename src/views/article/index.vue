@@ -139,7 +139,8 @@ export default {
       ],
       totalCount: 0,
       loading: true,
-      articleChannel: []
+      articleChannel: [],
+      page: 1
     }
   },
   created () {
@@ -201,7 +202,10 @@ export default {
     // 换页时加载文章数据
     onPageChange (page) {
       this.loadArticle(page)
+      this.page = page
     },
+
+    // 删除文章
     onDelete (ID) {
       const token = window.localStorage.getItem('user-token')
       this.$axios({
@@ -213,7 +217,7 @@ export default {
       })
         .then(res => {
           console.log(res)
-          this.loadArticle()
+          this.loadArticle(this.page)
         })
         .catch(err => {
           console.log(err, '删除失败')
