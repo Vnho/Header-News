@@ -19,9 +19,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道选择">
-          <el-select placeholder="请选择活动区域" v-model="filterForm.channel_id">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select placeholder="请选择文章分类" v-model="filterForm.channel_id">
+            <el-option label="所有频道" :value="null"></el-option>
+            <el-option
+              v-for="item in articleChannel"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择">
@@ -37,7 +42,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button @click="loadArticle(1)" type="primary" round>查询</el-button>
+          <el-button @click="loadArticle()" type="primary" round>查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -76,8 +81,9 @@
         </el-table-column>
         <el-table-column prop="pubdate" label="发布时间"></el-table-column>
         <el-table-column prop="name" label="操作" width="180">
-          <template>
-            <el-button type="danger" size="mini">删除</el-button>
+          <!-- 此处需要遍历，将每一个数组遍历出来后，查找出所需要的ID -->
+          <template slot-scope="scope">
+            <el-button type="danger" size="mini" @click="onDelete(scope.row.id)">删除</el-button>
             <el-button type="primary" size="mini">编辑</el-button>
           </template>
         </el-table-column>
@@ -101,19 +107,13 @@ export default {
     return {
       filterForm: {
         status: null,
-        channel_id: '',
-        begin_pubdate: '',
-        end_pubdate: ''
+        channel_id: null
       },
       rangeDate: '',
       articals: [],
       articalStatus: [
         {
-          type: '',
-          label: '全部'
-        },
-        {
-          type: 'info',
+          type: 'primary',
           label: '草稿'
         },
         {
@@ -127,18 +127,29 @@ export default {
         {
           type: 'danger',
           label: '审核失败'
+        },
+        {
+          type: 'danger',
+          label: '已删除'
+        },
+        {
+          type: '',
+          label: '全部'
         }
       ],
       totalCount: 0,
-      loading: true
+      loading: true,
+      articleChannel: []
     }
   },
   created () {
-    this.loadArticle(1)
+    this.loadArticle()
+    this.loadChannel()
   },
   methods: {
-    // 设置默认页为第一页
+    // 加载所有文章并渲染
     loadArticle (page) {
+      // 设置默认页为第一页
       this.loading = true
       // 在项目中,除了登录页'/login'不需要token,其他接口都需要token
       const token = window.localStorage.getItem('user-token')
@@ -149,29 +160,65 @@ export default {
         headers: {
           Authorization: `Bearer ${token}`
         },
+
+        /*
+        Query参数,请求数据列表参数
+         */
         params: {
           page, // 页码
-          per_page: 10 // 每页显示的内容条数,后端默认每页十条
           // axios中有个功能，当参数值为null的时候不发送
+          per_page: 10, // 每页显示的内容条数,后端默认每页十条
+          status: this.filterForm.status,
+          channel_id: this.filterForm.channel_id,
+          begin_pubdate: this.rangeDate[0],
+          end_pubdate: this.rangeDate[1]
         }
       })
         .then(res => {
-          console.log(res)
           this.totalCount = res.data.data.total_count
           this.articals = res.data.data.results
         })
         .catch(err => {
-          console.log(err)
+          console.log(err, '查询失败')
         })
         .finally(() => {
           // 无论成功还是失败都会执行
           this.loading = false
         })
     },
+
+    // 加载所有文章类型
+    loadChannel () {
+      this.$axios({
+        method: 'GET',
+        url: '/channels'
+      }).then(res => {
+        console.log(res)
+        this.articleChannel = res.data.data.channels
+      })
+    },
+
+    // 换页时加载文章数据
     onPageChange (page) {
       this.loadArticle(page)
-    },
-    getChannelId () {}
+    }
+    // onDelete (ID) {
+    //   const token = window.localStorage.getItem('user-token')
+    //   this.$axios({
+    //     method: 'DELETE',
+    //     url: `/articles/${ID}`,
+    //     headers: {
+    //       Authorization: `Bearer ${token}`
+    //     }
+    //   })
+    //     .then(res => {
+    //       console.log(res)
+    //       this.loadArticle()
+    //     })
+    //     .catch(err => {
+    //       console.log(err, '删除失败')
+    //     })
+    // }
   }
 }
 </script>
