@@ -11,6 +11,7 @@
         <el-form-item label="内容">
           <!-- 富文本编辑器 -->
           <quill-editor
+            style="height:200px;margin-bottom:100px"
             v-model="publishForm.content"
             ref="myQuillEditor"
             :options="editorOption"
@@ -25,14 +26,16 @@
           </el-radio-group>
         </el-form-item>-->
         <el-form-item label="频道">
-          <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
+          <!-- <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
             <el-option
               v-for="item in articleChannel"
               :key="item.id"
               :label="item.name"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
+
+          <channel-select v-model="publishForm.channel_id"></channel-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit(false)">提交</el-button>
@@ -51,10 +54,11 @@ import 'quill/dist/quill.bubble.css'
 
 // 加载富文本编辑器核心组件
 import { quillEditor } from 'vue-quill-editor'
-
+import ChannelSelect from '../../components/channel-select/index'
 export default {
   components: {
-    quillEditor
+    quillEditor,
+    ChannelSelect
   },
   name: 'PublishArticle',
   data () {
@@ -68,12 +72,12 @@ export default {
           type: 0,
           images: []
         }
-      },
-      articleChannel: []
+      }
+      // articleChannel: []
     }
   },
   created () {
-    this.loadChannel()
+    // this.loadChannel()
   },
   methods: {
     // 添加文章
@@ -102,22 +106,22 @@ export default {
         .catch(err => {
           console.log('添加失败', err)
         })
-    },
+    }
 
     // 获取类别信息
-    loadChannel () {
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      })
-        .then(res => {
-          console.log('接收成功')
-          this.articleChannel = res.data.data.channels
-        })
-        .catch(err => {
-          console.log('接受失败', err)
-        })
-    }
+    // loadChannel () {
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   })
+    //     .then(res => {
+    //       console.log('接收成功')
+    //       this.articleChannel = res.data.data.channels
+    //     })
+    //     .catch(err => {
+    //       console.log('接受失败', err)
+    //     })
+    // }
   }
 }
 </script>

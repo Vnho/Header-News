@@ -4,18 +4,28 @@
     <el-card class="login-card">
       <!-- 卡片内容（用插槽） -->
       <div class="title">
-        <img src="../../assets/img/logo_index.png" alt />
+        <img src="../../assets/img/logo_index.png" alt=""/>
       </div>
       <!-- 表单 -->
       <!-- model属性 要绑定表单数据对象 -->
-      <el-form ref="formObj" style="margin-top:40px" :model="loginForm" :rules="loginRules">
+      <el-form
+      ref="formObj"
+      style="margin-top:40px"
+      :model="loginForm"
+      :rules="loginRules">
         <!-- 手机号  -->
         <el-form-item prop="mobile">
-          <el-input placeholder="请输入您的手机号" v-model="loginForm.mobile"></el-input>
+          <el-input
+          placeholder="请输入您的手机号"
+          v-model="loginForm.mobile"
+          ></el-input>
         </el-form-item>
         <!-- 验证码 -->
         <el-form-item prop="code">
-          <el-input placeholder="请输入您的验证码" style="width:280px" v-model="loginForm.code"></el-input>
+          <el-input
+          placeholder="请输入您的验证码"
+          style="width:280px"
+          v-model="loginForm.code"></el-input>
           <el-button plain style="float:right">发送验证码</el-button>
         </el-form-item>
         <!-- 勾选框 -->
@@ -82,6 +92,7 @@ export default {
             data: this.loginForm
           })
             .then(res => {
+              console.log(res)
               window.localStorage.setItem('user-token', res.data.data.token)
               this.$router.push('/layout')
             })

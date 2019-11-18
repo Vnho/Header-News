@@ -6,6 +6,7 @@ import Home from '../views/home/index.vue' // 在vue-cli中，@永远在src目�
 import Article from '../views/article/index.vue'
 import Publish from '../views/publish/index.vue'
 import Nprogress from 'nprogress'
+import Comment from '../views/comment/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +33,14 @@ const routes = [
       {
         path: '/publish',
         component: Publish
+      },
+      {
+        path: '/publish/:articleId',
+        component: Publish
+      },
+      {
+        path: '/comment',
+        component: Comment
       }
     ]
   },
@@ -66,18 +75,19 @@ router.beforeEach((to, from, next) => {
   Nprogress.start()
   // 判断，如果访问的是登录页，直接放行
   if (to.path === '/login') {
-    return next()
+    next()
+    // 停止后续代码执行
+    return
+  }
+  const token = window.localStorage.getItem('user-token')
+  if (token) {
+    next()
   } else {
-    const token = window.localStorage.getItem('user-token')
-    if (token) {
-      next()
-    } else {
-      next('/login')
-      // 如果在登录页非登录状态访问
-      // 非登录页面，手动终止进度条
-      // 否则进度条不会停止
-      Nprogress.done()
-    }
+    next('/login')
+    // 如果在登录页非登录状态访问
+    // 非登录页面，手动终止进度条
+    // 否则进度条不会停止
+    Nprogress.done()
   }
 })
 

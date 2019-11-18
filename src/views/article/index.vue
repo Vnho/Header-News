@@ -19,7 +19,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道选择">
-          <el-select placeholder="请选择文章分类" v-model="filterForm.channel_id">
+          <!-- <el-select placeholder="请选择文章分类">
             <el-option label="所有频道" :value="null"></el-option>
             <el-option
               v-for="item in articleChannel"
@@ -27,7 +27,8 @@
               :label="item.name"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
+            <channel-select v-model="filterForm.channel_id"></channel-select>
         </el-form-item>
         <el-form-item label="时间选择">
           <div class="block">
@@ -84,7 +85,11 @@
           <!-- 此处需要遍历，将每一个数组遍历出来后，查找出所需要的ID -->
           <template slot-scope="scope">
             <el-button type="danger" size="mini" @click="onDelete(scope.row.id)">删除</el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="$router.push(`/publish/${scope.row.id}`)"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,6 +98,7 @@
     默认按照10条每页划分页码-->
     <el-pagination
       background
+      :disabled="loading"
       layout="prev, pager, next"
       :total="totalCount"
       @current-change="onPageChange"
@@ -101,7 +107,11 @@
 </template>
 
 <script>
+import ChannelSelect from '@/components/channel-select'
 export default {
+  components: {
+    ChannelSelect
+  },
   name: 'filterform',
   data () {
     return {
@@ -139,13 +149,13 @@ export default {
       ],
       totalCount: 0,
       loading: true,
-      articleChannel: [],
+      // articleChannel: [],
       page: 1
     }
   },
   created () {
     this.loadArticle()
-    this.loadChannel()
+    // this.loadChannel()
   },
   methods: {
     // 加载所有文章并渲染
@@ -188,15 +198,15 @@ export default {
     },
 
     // 加载所有文章类型
-    loadChannel () {
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(res => {
-        console.log(res)
-        this.articleChannel = res.data.data.channels
-      })
-    },
+    // loadChannel () {
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   }).then(res => {
+    //     console.log(res)
+    //     this.articleChannel = res.data.data.channels
+    //   })
+    // },
 
     // 换页时加载文章数据
     onPageChange (page) {
