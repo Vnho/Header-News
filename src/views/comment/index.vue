@@ -15,7 +15,7 @@
               v-model="scope.row.comment_status"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              @change="statusChange"
+              @change="onStatusChange(scope.row)"
             ></el-switch>
           </template>
         </el-table-column>
@@ -58,7 +58,7 @@ export default {
         }
       })
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           this.articles = res.data.data.results
           this.totalPage = res.data.data.results.length
         })
@@ -70,13 +70,23 @@ export default {
       this.loadArticle(page)
       this.page = page
     },
-    statusChange () {
+    onStatusChange (article) {
+      console.log(article)
       this.$axios({
         method: 'PUT',
         url: '/comments/status',
         params: {
-          article_id: null
+          article_id: article.id.toString()
+        },
+        data: {
+          allow_comment: article.comment_status
         }
+      }).then(res => {
+        console.log(res)
+        this.$message.success('修改成功了哟O(∩_∩)O~')
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('修改失败了o(╥﹏╥)o')
       })
     }
   }
