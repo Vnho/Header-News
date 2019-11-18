@@ -119,7 +119,7 @@ export default {
         status: null,
         channel_id: null
       },
-      rangeDate: '',
+      rangeDate: null,
       articals: [],
       articalStatus: [
         {
@@ -180,8 +180,8 @@ export default {
           per_page: 10, // 每页显示的内容条数,后端默认每页十条
           status: this.filterForm.status,
           channel_id: this.filterForm.channel_id,
-          begin_pubdate: this.rangeDate[0],
-          end_pubdate: this.rangeDate[1]
+          begin_pubdate: this.rangeDate ? this.rangeDate[0] : null,
+          end_pubdate: this.rangeDate ? this.rangeDate[1] : null
         }
       })
         .then(res => {

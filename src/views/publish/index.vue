@@ -2,7 +2,7 @@
   <div class="publish">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>发表文章</span>
+        <span>{{this.$route.params.articleId?'编辑文章':'发布文章'}}</span>
       </div>
       <el-form ref="form" label-width="80px">
         <el-form-item label="标题">
@@ -33,7 +33,7 @@
               :label="item.name"
               :value="item.id"
             ></el-option>
-          </el-select> -->
+          </el-select>-->
 
           <channel-select v-model="publishForm.channel_id"></channel-select>
         </el-form-item>
@@ -78,10 +78,28 @@ export default {
   },
   created () {
     // this.loadChannel()
+    /*
+    判断是否为编辑状态
+    也就是判断所传过来的地址里面是否携带ID
+    */
+    if (this.$route.params.articleId) {
+      this.loadArticles()
+    }
   },
   methods: {
     // 添加文章
     onSubmit (draft) {
+      if (this.$route.params.articleId) {
+        // 编辑文章
+        this.updataArticle(draft)
+      } else {
+      // 添加文章
+        this.addArticle(draft)
+      }
+    },
+
+    // 添加文章
+    addArticle (draft) {
       this.$axios({
         method: 'POST',
         url: '/articles',
@@ -101,11 +119,55 @@ export default {
       })
         .then(res => {
           console.log('添加成功', res)
+          this.$message({
+            type: 'success',
+            message: '添加成功了哦O(∩_∩)O~'
+          })
           this.$router.push('/article')
         })
         .catch(err => {
           console.log('添加失败', err)
+          this.$message({
+            type: 'error',
+            message: '添加失败了o(╥﹏╥)o'
+          })
         })
+    },
+
+    // 编辑文章
+    updataArticle (draft) {
+      this.$axios({
+        method: 'PUT',
+        url: `/articles/${this.$route.params.articleId}`,
+        params: {
+          draft
+        },
+        data: this.publishForm
+      }).then(res => {
+        console.log(res)
+        this.$message({
+          type: 'success',
+          message: '修改成功了哦O(∩_∩)O~'
+        })
+        this.$router.push('/article')
+      }).catch(err => {
+        console.log(err)
+        this.$message({
+          type: 'error',
+          message: '修改失败了o(╥﹏╥)o'
+        })
+      })
+    },
+
+    // 加载编辑文章信息内容
+    loadArticles () {
+      this.$axios({
+        method: 'GET',
+        url: `/articles/${this.$route.params.articleId}`
+      }).then(res => {
+        console.log(res.data)
+        this.publishForm = res.data.data
+      })
     }
 
     // 获取类别信息
