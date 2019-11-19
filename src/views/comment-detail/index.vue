@@ -58,7 +58,7 @@
 
 <script>
 // 引入日期组件包
-import Moment from 'moment'
+// import Moment from 'moment'
 
 export default {
   name: 'CommentDetail',
@@ -87,11 +87,12 @@ export default {
   ***
     调用方式: {{ 数据 | 过滤器函数 }}
   */
-  filters: {
-    dataFormat (value) {
-      return Moment(value).format('YYYY-MM-DD')
-    }
-  },
+  //  局部过滤器
+  // filters: {
+  //   dataFormat (value) {
+  //     return Moment(value).format('YYYY-MM-DD')
+  //   }
+  // },
   created () {
     this.loadComment()
   },

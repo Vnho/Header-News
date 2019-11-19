@@ -7,7 +7,7 @@ import jsonBigint from 'json-bigint'
 import 'element-ui/lib/theme-chalk/index.css'
 import './styles/index.less'
 import 'nprogress/nprogress.css'
-
+import Moment from 'moment'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 
 // axios收到相应数据后会先经过这里
@@ -49,6 +49,18 @@ Vue.prototype.$axios = axios // 将axios共享给所有的实例使用
 Vue.use(ElementUI, {
   size: 'small'
 })
+
+// 定义全局过滤器
+// 任何组件模板都可以直接访问
+// 参数1：过滤器名称
+// 参数2：函数
+// 调用方式：在模板中 {{ 数据 | 过滤器名称 }}
+// | 管道符前面的数据会作为参数传递给过滤器
+Vue.filter('dataFormat', value => {
+  // console.log(value)
+  return Moment(value).format('YYYY-MM-DD')
+})
+
 Vue.config.productionTip = false
 
 new Vue({
