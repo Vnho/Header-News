@@ -43,7 +43,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button @click="loadArticle()" type="primary" round>查询</el-button>
+          <el-button @click="onQuery" type="primary" round>查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -72,19 +72,36 @@
             <img :src="scope.row.cover.images[0]" width="100px" />
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" width="180"></el-table-column>
-        <el-table-column prop="status" label="发布状态" width="180">
+        <el-table-column
+        prop="title"
+        label="标题"
+        width="180"></el-table-column>
+        <el-table-column
+        prop="status"
+        label="发布状态"
+        width="180">
           <template slot-scope="scope">
-            <el-tag :type="articalStatus[scope.row.status].type" effect="dark" size="mini">
+            <el-tag
+            :type="articalStatus[scope.row.status].type"
+            effect="dark"
+            size="mini">
               <span>{{articalStatus[scope.row.status].label}}</span>
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="pubdate" label="发布时间"></el-table-column>
-        <el-table-column prop="name" label="操作" width="180">
+        <el-table-column
+        prop="pubdate"
+        label="发布时间"></el-table-column>
+        <el-table-column
+        prop="name"
+        label="操作"
+        width="180">
           <!-- 此处需要遍历，将每一个数组遍历出来后，查找出所需要的ID -->
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="onDelete(scope.row.id)">删除</el-button>
+            <el-button
+            type="danger"
+            size="mini"
+            @click="onDelete(scope.row.id)">删除</el-button>
             <el-button
               type="primary"
               size="mini"
@@ -97,6 +114,7 @@
     <!-- 分页组件
     默认按照10条每页划分页码-->
     <el-pagination
+      :current-page="page"
       background
       :disabled="loading"
       layout="prev, pager, next"
@@ -230,6 +248,11 @@ export default {
         .catch(err => {
           console.log(err, '删除失败')
         })
+    },
+
+    onQuery () {
+      this.loadArticle()
+      this.page = 1
     }
   }
 }

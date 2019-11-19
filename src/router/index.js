@@ -7,6 +7,7 @@ import Article from '../views/article/index.vue'
 import Publish from '../views/publish/index.vue'
 import Nprogress from 'nprogress'
 import Comment from '../views/comment/index.vue'
+import contentDetail from '@/views/comment-detail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -41,6 +42,13 @@ const routes = [
       {
         path: '/comment',
         component: Comment
+      },
+      {
+        path: '/comment/:articleId',
+        component: contentDetail,
+
+        // 将路由参数映射给组件的 props 数据,这样获取参数更方便
+        props: true
       }
     ]
   },

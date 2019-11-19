@@ -6,6 +6,10 @@
     @input="onInput"
     >
       <el-option
+      v-if="notAll"
+      :value="null"
+      label="全部频道"></el-option>
+      <el-option
       v-for="item in articleChannel"
       :key="item.id"
       :label="item.name"
@@ -17,14 +21,23 @@
 <script>
 export default {
   name: 'ChannelSelect',
-  components: {},
-  // props: {
-  //   value: {
-  //     type: [String, Number],
-  //     require: true
-  //   }
-  // },
-  props: ['value'],
+
+  // 对象方法接收Query参数
+  props: {
+    value: {
+      type: [String, Number] // 数据类型
+      // require: true //必填项
+      // default:  //默认值
+      // validator:function (param) {  }  //自定义验证
+    },
+    notAll: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  // 数组方法接收Query参数 （不推荐）
+  // props: ['value'],
   data () {
     return {
       articleChannel: [] // 存储频道列表

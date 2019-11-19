@@ -35,7 +35,10 @@
             ></el-option>
           </el-select>-->
 
-          <channel-select v-model="publishForm.channel_id"></channel-select>
+          <channel-select
+          v-model="publishForm.channel_id"
+          :notAll='false'
+          ></channel-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit(false)">提交</el-button>
