@@ -48,6 +48,19 @@
         </template>
         </el-table-column>
         <el-table-column
+        label="是否推荐"
+        width="180">
+        <template slot-scope="scope">
+          <el-switch
+          v-model="scope.row.is_top"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          @change="onRecommend(scope.row)"
+          >
+        </el-switch>
+        </template>
+        </el-table-column>
+        <el-table-column
         prop="reply_count"
         label="回复数量"
         ></el-table-column>
@@ -71,6 +84,7 @@ export default {
   data () {
     return {
       commentData: []
+      // is_top:
     }
   },
 
@@ -97,6 +111,25 @@ export default {
     this.loadComment()
   },
   methods: {
+    // 是否推荐
+    onRecommend (comment) {
+      this.$axios({
+        method: 'PUT',
+        url: `comments/${comment.com_id}/sticky`,
+        data: {
+          // comment.is_top 双向绑定给了开关按钮
+          // 所以获取 comment.is_top 就是获取了开关的状态
+          sticky: comment.is_top
+        }
+      }).then(res => {
+        this.$message.success('修改成功')
+      }).catch(err => {
+        console.log(err)
+        this.$message.danger('修改失败')
+      })
+    },
+
+    // 加载数据
     loadComment () {
       this.$axios({
         method: 'GET',
@@ -112,7 +145,7 @@ export default {
         // Moment(指定时间).format('格式')
             element.pubdate = Moment(element.pubdate).format(`YYYY年MM月DD日`)
          }) */
-        console.log(res)
+        // console.log(res)
         this.commentData = commentData
       }).catch(err => {
         console.log(err)

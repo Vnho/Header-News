@@ -8,6 +8,7 @@ import Publish from '../views/publish/index.vue'
 import Nprogress from 'nprogress'
 import Comment from '../views/comment/index.vue'
 import contentDetail from '@/views/comment-detail'
+import Material from '@views/material'
 Vue.use(VueRouter)
 
 const routes = [
@@ -49,6 +50,10 @@ const routes = [
 
         // 将路由参数映射给组件的 props 数据,这样获取参数更方便
         props: true
+      },
+      {
+        path: '/material',
+        component: Material
       }
     ]
   },
