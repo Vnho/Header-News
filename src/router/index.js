@@ -8,7 +8,7 @@ import Publish from '../views/publish/index.vue'
 import Nprogress from 'nprogress'
 import Comment from '../views/comment/index.vue'
 import contentDetail from '@/views/comment-detail'
-import Material from '@views/material'
+import Material from '@/views/material'
 Vue.use(VueRouter)
 
 const routes = [

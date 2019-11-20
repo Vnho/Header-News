@@ -1,15 +1,28 @@
 <template>
   <div class="material">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>素材管理</span>
+        <el-button style="float: right; padding: 3px 0" type="text">上传图片</el-button>
+      </div>
 
+      <!--分栏偏移式 LayOut布局
+         el-row 行
+         el-col 列
+      -->
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="12" :md="6"><div class="grid-content bg-purple">123</div></el-col>
+        <el-col :xs="24" :sm="12" :md="6"><div class="grid-content bg-purple">456</div></el-col>
+        <el-col :xs="24" :sm="12" :md="6"><div class="grid-content bg-purple">789</div></el-col>
+        <el-col :xs="24" :sm="12" :md="6"><div class="grid-content bg-purple">999</div></el-col>
+      </el-row>
+    </el-card>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style>
-
 </style>
