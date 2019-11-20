@@ -8,11 +8,12 @@
 
       <!-- 选择框选择状态（全部或收藏） -->
       <div>
-        <el-radio-group v-model="radio1">
-          <el-radio-button label="上海"></el-radio-button>
-          <el-radio-button label="北京"></el-radio-button>
-          <el-radio-button label="广州"></el-radio-button>
-          <el-radio-button label="深圳"></el-radio-button>
+        <el-radio-group
+        v-model="status"
+        @change="onFind"
+        >
+          <el-radio-button label="all">全部</el-radio-button>
+          <el-radio-button label="collect">收藏</el-radio-button>
         </el-radio-group>
       </div>
 
@@ -41,10 +42,13 @@
             <div
             style="padding: 14px;" class="operation">
             <!-- class 的对象语法 -->
-            <i :class="{
+            <i
+            :class="{
               'el-icon-star-on':item.is_collected,
               'el-icon-star-off':!item.is_collected
-            }"></i>
+            }"
+            @click="onCollect(item)"
+            ></i>
             <!-- class 的普通判断语法 -->
               <!-- <i :class="item.is_collected ? 'el-icon-star-on' : 'el-icon-star-off'"></i> -->
               <i class="el-icon-delete-solid"></i>
@@ -53,9 +57,10 @@
         </el-col>
       </el-row>
       <el-pagination
+      @current-change="changePage"
       background
       layout="prev, pager, next"
-      :total="1000">
+      :total="total_count">
     </el-pagination>
     </el-card>
   </div>
@@ -66,26 +71,61 @@ export default {
   name: 'MaterialConnect',
   data () {
     return {
-      images: []
+      images: [],
+      status: this.collect,
+      page: 1,
+      total_count: 0
     }
   },
-  created (page) {
+  created () {
     this.loadMaterial()
   },
   methods: {
-    loadMaterial (page) {
+    // 加载素材列表
+    loadMaterial (isFind, page) {
       this.$axios({
         method: 'GET',
         url: '/user/images',
         params: {
-          collect: false,
-          page
+          collect: isFind,
+          page,
+          per_page: 20
         }
       }).then(res => {
         console.log('获取素材成功', res)
         this.images = res.data.data.results
+        this.total_count = res.data.data.total_count
       }).catch(err => {
         console.log('获取素材失败', err)
+      })
+    },
+
+    // 查看列表状态数据
+    onFind (value) {
+      // value 是 radio 标签自带参数，可以获得label中的值
+      this.loadMaterial(value !== 'all')
+    },
+
+    // 换页时的操作
+    changePage (page) {
+      this.loadMaterial(page)
+      this.page = page
+    },
+
+    // 收藏时的操作
+    onCollect (item) {
+      this.$axios({
+        method: 'PUT',
+        url: `/user/images/${item.id}`,
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(res => {
+        this.$message.success('操作成功')
+        item.is_collected = !item.is_collected
+      }).catch(err => {
+        console.log('收藏失败', err)
+        this.$message.danger('收藏失败o(╥﹏╥)o')
       })
     }
   }

@@ -41,7 +41,7 @@
     background
     layout="prev, pager, next"
     :total="totalPage"
-    @change="changePage"
+    @current-change="changePage"
     ></el-pagination>
   </div>
 </template>
