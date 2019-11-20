@@ -1,9 +1,26 @@
 <template>
   <div class="material">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
+      <div
+      slot="header"
+      class="clearfix upload">
         <span>素材管理</span>
-        <el-button style="float: right; padding: 3px 0" type="text">上传图片</el-button>
+        <!--
+          action 上传文件的请求地址
+          上传组件能帮我们自动发送请求，我们只需要把接口相关参数配置给它们
+          上传组件内部会自己去发送请求提交文件，它内部使用不是我们项目中的axios
+          所以也不会有拦截器和基础路径
+           -->
+        <el-upload
+        class="upload-demo"
+        action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+        :headers="uploadHeaders"
+        name="image"
+        :on-success="onUpload"
+        :show-file-list="false"
+        >
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
       </div>
 
       <!-- 选择框选择状态（全部或收藏） -->
@@ -41,17 +58,23 @@
             />
             <div
             style="padding: 14px;" class="operation">
-            <!-- class 的对象语法 -->
-            <i
-            :class="{
-              'el-icon-star-on':item.is_collected,
-              'el-icon-star-off':!item.is_collected
-            }"
-            @click="onCollect(item)"
-            ></i>
-            <!-- class 的普通判断语法 -->
+            <!-- 收藏图片 -->
+              <!-- class 的对象语法 -->
+              <i
+              :class="{
+                'el-icon-star-on':item.is_collected,
+                'el-icon-star-off':!item.is_collected
+              }"
+              @click="onCollect(item)"
+              ></i>
+              <!-- class 的普通判断语法 -->
               <!-- <i :class="item.is_collected ? 'el-icon-star-on' : 'el-icon-star-off'"></i> -->
-              <i class="el-icon-delete-solid"></i>
+
+            <!-- 删除图片 -->
+              <i
+              class="el-icon-delete-solid"
+              @click="onDelete(item)"
+              ></i>
             </div>
           </el-card>
         </el-col>
@@ -67,6 +90,7 @@
 </template>
 
 <script>
+const token = window.localStorage.getItem('user-token')
 export default {
   name: 'MaterialConnect',
   data () {
@@ -74,7 +98,10 @@ export default {
       images: [],
       status: this.collect,
       page: 1,
-      total_count: 0
+      total_count: 0,
+      uploadHeaders: {
+        Authorization: `Bearer ${token}`
+      }
     }
   },
   created () {
@@ -92,7 +119,7 @@ export default {
           per_page: 20
         }
       }).then(res => {
-        console.log('获取素材成功', res)
+        // console.log('获取素材成功', res)
         this.images = res.data.data.results
         this.total_count = res.data.data.total_count
       }).catch(err => {
@@ -112,7 +139,7 @@ export default {
       this.page = page
     },
 
-    // 收藏时的操作
+    // 收藏图片
     onCollect (item) {
       this.$axios({
         method: 'PUT',
@@ -127,12 +154,46 @@ export default {
         console.log('收藏失败', err)
         this.$message.danger('收藏失败o(╥﹏╥)o')
       })
+    },
+
+    // 删除图片
+    onDelete (item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios({
+          method: 'DELETE',
+          url: `/user/images/${item.id}`
+        }).then(res => {
+          this.loadMaterial(this.status !== 'all')
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+
+    // 上传图片素材
+    onUpload () {
+      this.loadMaterial()
     }
   }
 }
 </script>
 
 <style lang='less'>
+.upload{
+  display: flex;
+  justify-content: space-between
+}
 .col-style{
   margin-bottom: 20px;
   .operation{
