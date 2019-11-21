@@ -180,10 +180,13 @@ export default {
           url: `/user/images/${item.id}`
         }).then(res => {
           this.loadMaterial(this.status === 'all')
-        })
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(err => {
+          console.log(err)
+          this.$message.danger('删除失败')
         })
       }).catch(() => {
         this.$message({

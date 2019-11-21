@@ -9,11 +9,15 @@
     <!-- 右侧 -->
     <el-col class="right" :span="3">
       <!-- 头像 -->
-      <img src="../assets/img/avatar.jpg" alt />
+      <img
+      :src="user.photo"
+      height="50"
+      width="50"
+      />
       <!-- 下拉菜单 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          Vnho
+          {{user.name}}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -28,7 +32,19 @@
 
 <script>
 export default {
+  data () {
+    return {
+      user: {
+        name: null,
+        photo: null
+      }
+    }
+  },
+  created () {
+    this.loadUser()
+  },
   methods: {
+    // 用户退出登录
     userOut () {
       this.$confirm('您将退出登录, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -49,6 +65,18 @@ export default {
             message: '已取消退出'
           })
         })
+    },
+
+    // 加载用户信息
+    loadUser () {
+      this.$axios({
+        method: 'GET',
+        url: '/user/profile'
+      }).then(res => {
+        // 查看获取到的数据
+        console.log(res)
+        this.user = res.data.data
+      })
     }
   }
 }
