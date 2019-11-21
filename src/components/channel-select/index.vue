@@ -53,13 +53,15 @@ export default {
         url: '/channels'
       })
         .then(res => {
-          console.log('接收成功')
+          // console.log('接收成功')
           this.articleChannel = res.data.data.channels
         })
         .catch(err => {
           console.log('接受失败', err)
         })
     },
+
+    // 这个函数传的参数是整个input中的值
     onInput (data) {
       this.$emit('input', data)
     }

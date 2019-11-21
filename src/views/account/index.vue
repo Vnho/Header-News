@@ -50,6 +50,10 @@
 </template>
 
 <script>
+// 导入定义的传值组件
+// 也就是自己定义的新的空 Vue 实例
+import eventBus from '@/utils/event-bus'
+
 export default {
   name: 'Account',
   data () {
@@ -63,9 +67,11 @@ export default {
       }
     }
   },
+
   created () {
     this.loadAccount()
   },
+
   methods: {
     // 加载个人用户信息
     loadAccount () {
@@ -88,6 +94,10 @@ export default {
         data: this.accountData
       }).then(res => {
         this.$message.success('编辑完成')
+
+        // 修改更新信息完成后，通知头部组件
+        // 传入修改后的参数
+        eventBus.$emit('event-bus', this.accountData)
       }).catch(err => {
         console.log(err)
         this.$message.success('编辑失败')
@@ -106,6 +116,7 @@ export default {
         data: formData
       }).then(res => {
         this.$message.success('头像修改成功')
+        eventBus.$emit('event-bus', this.accountData)
         this.accountData.photo = res.data.data.photo
       }).catch(err => {
         console.log(err)

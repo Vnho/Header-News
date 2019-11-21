@@ -31,6 +31,10 @@
 </template>
 
 <script>
+// 导入定义的传值组件
+// 也就是自己定义的新的空 Vue 实例
+import eventBus from '@/utils/event-bus'
+
 export default {
   data () {
     return {
@@ -40,9 +44,17 @@ export default {
       }
     }
   },
+
   created () {
     this.loadUser()
+
+    // 在初始化中监听自定义事件
+    eventBus.$on('event-bus', (userData) => {
+      console.log('event-bus组件传值调用了')
+      this.user = userData
+    })
   },
+
   methods: {
     // 用户退出登录
     userOut () {
@@ -74,7 +86,7 @@ export default {
         url: '/user/profile'
       }).then(res => {
         // 查看获取到的数据
-        console.log(res)
+        // console.log(res)
         this.user = res.data.data
       })
     }
