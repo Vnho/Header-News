@@ -92,7 +92,7 @@
         </el-col>
       </el-row>
       <el-pagination
-      @current-change="changePage"
+      @current-change="changePage(page)"
       background
       layout="prev, pager, next"
       :total="total_count">
@@ -121,14 +121,14 @@ export default {
   },
   methods: {
     // 加载素材列表
-    loadMaterial (isFind, page) {
+    loadMaterial (isFind = false, page) {
       this.$axios({
         method: 'GET',
         url: '/user/images',
         params: {
           collect: isFind,
           page,
-          per_page: 20
+          per_page: 10
         }
       }).then(res => {
         // console.log('获取素材成功', res)
@@ -146,8 +146,8 @@ export default {
     },
 
     // 换页时的操作
-    changePage (page) {
-      this.loadMaterial(page)
+    changePage (page, value) {
+      this.loadMaterial(value !== 'all')
       this.page = page
     },
 
@@ -235,7 +235,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .upload{
   display: flex;
   justify-content: space-between

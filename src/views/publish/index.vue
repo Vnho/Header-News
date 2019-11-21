@@ -8,6 +8,8 @@
         <el-form-item label="标题">
           <el-input v-model="publishForm.title"></el-input>
         </el-form-item>
+
+        <!-- 文章内容区域 -->
         <el-form-item label="内容">
           <!-- 富文本编辑器 -->
           <quill-editor
@@ -17,14 +19,8 @@
             :options="editorOption"
           ></quill-editor>
         </el-form-item>
-        <!-- <el-form-item label="封面">
-          <el-radio-group v-model="publishForm.cover">
-            <el-radio label="1">单图</el-radio>
-            <el-radio label="3">三图</el-radio>
-            <el-radio label="0">无图</el-radio>
-            <el-radio label="-1">自动</el-radio>
-          </el-radio-group>
-        </el-form-item>-->
+
+        <!-- 频道管理 -->
         <el-form-item label="频道">
           <!-- <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
             <el-option
@@ -35,11 +31,29 @@
             ></el-option>
           </el-select>-->
 
-          <channel-select
-          v-model="publishForm.channel_id"
-          :notAll='false'
-          ></channel-select>
+          <channel-select v-model="publishForm.channel_id" :notAll="false"></channel-select>
         </el-form-item>
+
+        <!-- 添加封面图片 -->
+        <el-form-item label="封面">
+          <el-radio-group v-model="publishForm.cover.type">
+            <el-radio :label="1">单图</el-radio>
+            <el-radio :label="3">三图</el-radio>
+            <el-radio :label="0">无图</el-radio>
+            <el-radio :label="-1">自动</el-radio>
+          </el-radio-group>
+          <template v-if="publishForm.cover.type>0">
+            <el-row :gutter="20">
+              <el-col :span="5" v-for="item in publishForm.cover.type" :key="item">
+                <upload-images>
+
+                </upload-images>
+              </el-col>
+            </el-row>
+          </template>
+        </el-form-item>
+
+        <!-- 表单提交 -->
         <el-form-item>
           <el-button type="primary" @click="onSubmit(false)">提交</el-button>
           <el-button @click="onSubmit(true)">草稿</el-button>
@@ -58,12 +72,17 @@ import 'quill/dist/quill.bubble.css'
 // 加载富文本编辑器核心组件
 import { quillEditor } from 'vue-quill-editor'
 import ChannelSelect from '../../components/channel-select/index'
+
+import uploadImages from './components/upload-images'
+
 export default {
+  name: 'PublishArticle',
+
   components: {
     quillEditor,
-    ChannelSelect
+    ChannelSelect,
+    uploadImages
   },
-  name: 'PublishArticle',
   data () {
     return {
       editorOption: {}, // 富文本编辑器的配置选项对象
@@ -96,7 +115,7 @@ export default {
         // 编辑文章
         this.updataArticle(draft)
       } else {
-      // 添加文章
+        // 添加文章
         this.addArticle(draft)
       }
     },
@@ -146,20 +165,22 @@ export default {
           draft
         },
         data: this.publishForm
-      }).then(res => {
-        console.log(res)
-        this.$message({
-          type: 'success',
-          message: '修改成功了哦O(∩_∩)O~'
-        })
-        this.$router.push('/article')
-      }).catch(err => {
-        console.log(err)
-        this.$message({
-          type: 'error',
-          message: '修改失败了o(╥﹏╥)o'
-        })
       })
+        .then(res => {
+          console.log(res)
+          this.$message({
+            type: 'success',
+            message: '修改成功了哦O(∩_∩)O~'
+          })
+          this.$router.push('/article')
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message({
+            type: 'error',
+            message: '修改失败了o(╥﹏╥)o'
+          })
+        })
     },
 
     // 加载编辑文章信息内容
