@@ -44,10 +44,11 @@
           </el-radio-group>
           <template v-if="publishForm.cover.type>0">
             <el-row :gutter="20">
-              <el-col :span="5" v-for="item in publishForm.cover.type" :key="item">
-                <upload-images>
-
-                </upload-images>
+              <el-col :span="5"
+              v-for="(item,index) in publishForm.cover.type"
+              :key="item">
+                <upload-images
+                v-model="publishForm.cover.images[index]"></upload-images>
               </el-col>
             </el-row>
           </template>
