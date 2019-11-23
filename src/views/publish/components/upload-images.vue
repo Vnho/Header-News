@@ -167,7 +167,7 @@ export default {
   display: block;
 }
 .img-border{
-  border: 1px solid #000;
+  box-shadow: 0 0 0 1px #000;
   text-align: center;
 }
 </style>

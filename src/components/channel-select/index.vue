@@ -53,11 +53,9 @@ export default {
         url: '/channels'
       })
         .then(res => {
-          // console.log('接收成功')
           this.articleChannel = res.data.data.channels
         })
-        .catch(err => {
-          console.log('接受失败', err)
+        .catch(() => {
         })
     },
 
